@@ -1,0 +1,17 @@
+.CheeseburgerMenu {
+    display: none;
+}
+
+@media (max-width: 499px) {
+    .CheeseburgerMenu {
+        display: block;
+        cursor: pointer;
+    }
+
+    .CheeseburgerMenu div {
+        width: 35px;
+        height: 5px;
+        background-color: #f4d004;
+        margin: 6px 0;
+    }
+}
