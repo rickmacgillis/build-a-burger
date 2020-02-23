@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import axios from '../../../axios-orders';
+import {checkValidity} from '../../../shared/validation';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
@@ -42,6 +43,7 @@ class ContactData extends Component {
             ingredients: this.props.ingredients,
             price: this.props.totalPrice,
             orderData: formData,
+            userId: this.props.userId,
         };
 
         this.props.onOrderBurger(orderData);
@@ -52,7 +54,7 @@ class ContactData extends Component {
         const updatedFormEl = {...updatedOrderForm[inputId]};
         updatedFormEl.value = event.target.value;
         updatedFormEl.touched = true;
-        updatedFormEl.valid = this._checkValidity(updatedFormEl.value, updatedFormEl.validation);
+        updatedFormEl.valid = checkValidity(updatedFormEl.value, updatedFormEl.validation);
         updatedOrderForm[inputId] = updatedFormEl;
 
         let formIsValid = true;
@@ -63,25 +65,6 @@ class ContactData extends Component {
             }
         }
         this.setState({orderForm: updatedOrderForm, formIsValid});
-    }
-
-    _checkValidity(value, rules) {
-        rules = rules ?? {required: true};
-
-        let isValid = true;
-        if (rules.required) {
-            isValid = value.trim() !== '';
-        }
-
-        if (rules.minLength && isValid) {
-            isValid = value.length >= rules.minLength;
-        }
-
-        if (rules.maxLength && isValid) {
-            isValid = value.length <= rules.maxLength;
-        }
-
-        return isValid;
     }
 
     _makeInput(type, placeholder, validation = null) {
@@ -147,6 +130,8 @@ const mapStateToProps = state => ({
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
+    token: state.auth.token,
+    userId: state.auth.userId,
 });
 
 const mapDispatchToProps = dispatch => ({

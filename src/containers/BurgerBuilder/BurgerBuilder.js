@@ -10,7 +10,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../store/actions/index';
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 
     state = {
         purchasing: false,
@@ -21,7 +21,12 @@ class BurgerBuilder extends Component {
     }
 
     purchaseHandler = () => {
-        this.setState({ purchasing: true });
+        if (this.props.isAuthenticated) {
+            this.setState({ purchasing: true });
+        } else {
+            this.props.onSetAuthRedirectPath('/checkout');
+            this.props.history.push('/auth');
+        }
     }
 
     purchaseCancelHandler = () => {
@@ -52,6 +57,7 @@ class BurgerBuilder extends Component {
                         purchasable={ this.props.totalIngredients > 0 }
                         price={ this.props.totalPrice }
                         order={ this.purchaseHandler }
+                        isAuth={this.props.isAuthenticated}
                     />
                 </React.Fragment>
             );
@@ -81,6 +87,7 @@ const mapStateToProps = state => {
         totalPrice: state.burgerBuilder.totalPrice,
         totalIngredients: state.burgerBuilder.totalIngredients,
         error: state.burgerBuilder.error,
+        isAuthenticated: state.auth.token !== null,
     };
 };
 
@@ -90,6 +97,7 @@ const mapDispatchToProps = dispatch => {
         onIngredientAdded: ingredientName => dispatch(actions.addIngredient(ingredientName)),
         onIngredientRemoved: ingredientName => dispatch(actions.removeIngredient(ingredientName)),
         onInitPurchase: () => dispatch(actions.purchaseInit()),
+        onSetAuthRedirectPath: path => dispatch(actions.setAuthRedirectPath(path)),
     };
 };
 

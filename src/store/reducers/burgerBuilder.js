@@ -5,6 +5,7 @@ const initialState = {
     totalPrice: 4,
     totalIngredients: 0,
     error: false,
+    building: false,
 };
 
 const INGREDIENT_PRICES = {
@@ -24,6 +25,7 @@ const changeIngredientCount = (state, ingredientName, amount) => {
         },
         totalPrice: state.totalPrice + (INGREDIENT_PRICES[ingredientName] * multiplier),
         totalIngredients: state.totalIngredients+1,
+        building: true,
     };
 }
 
@@ -43,7 +45,9 @@ const reducer = (state = initialState, action) => {
                     meat: action.ingredients.meat,
                 },
                 totalPrice: initialState.totalPrice,
+                totalIngredients: 0,
                 error: false,
+                building: false,
             };
         case actionTypes.FETCH_INGREDIENTS_FAILED:
             return { ...state, error: true };
