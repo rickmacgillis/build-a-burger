@@ -31,9 +31,6 @@ const reducer = (state = initialState, action) => {
                 loading: false,
             };
         case actionTypes.AUTH_LOGOUT:
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('expirationDate');
             return {
                 ...state,
                 token: null,
